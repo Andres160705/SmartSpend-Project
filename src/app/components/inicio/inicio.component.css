@@ -1,0 +1,62 @@
+.bg-primary-green {
+            background-color: #28a745;
+        }
+        
+        .btn-light-green {
+            background-color: #90EE90;
+            border-color: #90EE90;
+            color: #333;
+        }
+        
+        .btn-light-green:hover {
+            background-color: #7FDD7F;
+            border-color: #7FDD7F;
+            color: #333;
+        }
+        
+        .btn-green {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+        
+        .btn-green:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            color: white;
+        }
+        
+        .star-icon {
+            color: #ffc107;
+        }
+        
+        .profile-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .welcome-banner {
+            background-color: #e9ecef;
+            border-radius: 10px;
+        }
+        
+        .savings-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .help-text {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .content-area {
+            min-height: calc(100vh - 80px);
+        }
