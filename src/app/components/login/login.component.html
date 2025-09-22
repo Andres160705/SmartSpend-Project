@@ -1,14 +1,16 @@
-<body>
-<form action="">
+<div class="login-background">
+<form (ngSubmit)="iniciarSesion()" #loginForm="ngForm">
     <h2>Iniciar Sesion</h2>
 <label for="">Email</label>
-<input type="email" id="email" placeholder="Escribe tu email">
+<input type="email" id="email" name="email"  placeholder="Escribe tu email" [(ngModel)]="usuario.email">
+
 <label for="">Contraseña</label>
-<input type="password" id="password" placeholder="Escribe tu contraseña">
+<input type="password" id="password" name="password" placeholder="Escribe tu contraseña" [(ngModel)]="usuario.password">
+
 <button type="submit">Enviar</button>
+<hr>
 <p>Iniciar con Google</p>
-    <button>Ingresar</button>
+    <button (click)="autenticarConGoogle()">Ingresar</button>
 </form>
-  
-</body>
+  </div>
 
