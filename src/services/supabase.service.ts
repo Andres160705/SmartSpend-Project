@@ -14,13 +14,28 @@ export class SupabaseService {
     );
   }
 
-  // 🔐 Autenticación
+   // 🔐 Autenticación
   signUp(email: string, password: string) {
     return this.supabase.auth.signUp({ email, password });
   }
 
+  
   signIn(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
+  }
+
+  resetPassword(email: string) {
+    return this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'http://localhost:4200/nueva-contrasena' // Cambia esto a la URL de tu aplicación
+    });
+  }
+
+  updatePassword(nuevaPassword: string) {
+    return this.supabase.auth.updateUser({ password: nuevaPassword });
+  }
+
+  getUser() {
+    return this.supabase.auth.getUser();
   }
 
   // 📥 Insertar gasto
@@ -38,14 +53,9 @@ export class SupabaseService {
     return this.supabase.from('gastos').select('*').eq('usuario_id', usuarioId);
   }
 
-
+  // 👤 Insertar perfil de usuario
   insertUsuario(usuario: { id: string; nombre: string; apellido: string; edad: number }) {
     return this.supabase.from('usuarios').insert([usuario]);
-
   }
-getUser() {
-  return this.supabase.auth.getUser();
 }
-
   
-}

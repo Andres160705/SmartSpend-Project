@@ -19,7 +19,7 @@ interface Usuario {
 export class LoginComponent {
   usuario: Usuario = { email: '', password: '' };
 
-  constructor(private router: Router, private supabase: SupabaseService) {}
+  constructor(private router: Router, private supabase: SupabaseService) { }
 
   async iniciarSesion() {
     const { email, password } = this.usuario;
@@ -40,5 +40,7 @@ export class LoginComponent {
       alert('Por favor, complete todos los campos.');
     }
   }
-
+  recuperarContrasena() {
+    this.router.navigate(['/actualizar-contrasena']);
+  }
 }
