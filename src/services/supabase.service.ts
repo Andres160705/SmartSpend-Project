@@ -17,8 +17,18 @@ export class SupabaseService {
 
    // 🔐 Autenticación
   signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({ email, password });
-  }
+  return this.supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: 'https://smart-spend-project.vercel.app/verificado'
+    }
+  });
+}
+
+
+
+
 
   
   signIn(email: string, password: string) {
