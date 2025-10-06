@@ -60,3 +60,10 @@
         .content-area {
             min-height: calc(100vh - 80px);
         }
+
+        .savings-card {
+  transition: all 0.3s ease;
+}
+.savings-card:hover {
+  box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
+}

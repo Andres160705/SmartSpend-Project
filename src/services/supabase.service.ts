@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -57,5 +58,40 @@ export class SupabaseService {
   insertUsuario(usuario: { id: string; nombre: string; apellido: string; edad: number }) {
     return this.supabase.from('usuarios').insert([usuario]);
   }
+
+  insertMeta(meta: any) {
+  return this.supabase.from('metas').insert([meta]).select(); // esto devuelve un array con el objeto insertado
 }
+
+actualizarIngreso(metaId: string, nuevoIngreso: number) {
+  return this.supabase.from('metas').update({ ingreso: nuevoIngreso }).eq('id', metaId);
+}
+
+eliminarMeta(metaId: string) {
+  return this.supabase.from('metas').delete().eq('id', metaId);
+}
+
+ async subirImagen(nombre: string, archivo: File): Promise<{ url: string | null; error: string | null }> {
+  try {
+    const { data, error } = await this.supabase.storage.from('metas').upload(nombre, archivo);
+    if (error) {
+      console.error('Error al subir imagen:', error.message);
+      return { url: null, error: error.message };
+    }
+
+    const { data: urlData } = this.supabase.storage.from('metas').getPublicUrl(nombre);
+    const publicUrl = urlData.publicUrl;
+
+    return { url: publicUrl, error: null };
+  } catch (err: any) {
+    console.error('Error inesperado al subir imagen:', err);
+    return { url: null, error: 'Error inesperado al subir imagen' };
+  }
+}
+
+
+
+
+}
+
   
