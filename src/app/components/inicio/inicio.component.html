@@ -111,6 +111,37 @@
         </div>
 
 
+             <!-- Egresos Form -->
+
+             <div class="row">
+                <div *ngIf="mostrarFormulario" class="col-12 col-md-6 mx-auto">
+                    <div class="p-3 bg-light rounded shadow-sm">
+                        <form (ngSubmit)="agregarEgreso()" #metaForm="ngForm">
+                            <div class="mb-2">
+                                <label>Nombre del egreso</label>
+                                <input type="text" class="form-control" [(ngModel)]="nuevoEgreso.nombre" name="nombre"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Fecha del egreso</label>
+                                <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fecha"
+                                    name="fecha" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Ingreso inicial ($)</label>
+                                <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.ingreso" name="ingreso"
+                                    required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 mt-2">Guardar Egreso</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+         <!-- Fin Egresos Form -->
+
+
+
         <!-- Savings Card -->
         <div *ngFor="let meta of metas" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
             <div class="d-flex align-items-center justify-content-between">
@@ -136,11 +167,6 @@
 
             </div>
         </div>
-
-
-
-
-
 
 
     </div>

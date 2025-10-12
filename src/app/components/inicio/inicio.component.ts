@@ -21,7 +21,16 @@ export class InicioComponent {
     ingreso: 0
   };
 
+
+  nuevoEgreso = {
+    nombre: '',
+    fecha : "",
+    ingreso: 0
+  };
+
+
   metas: any[] = [];
+  egresos: any[] = [];
   imagenSeleccionada: File | null = null;
 
   onFileSelected(event: any) {
@@ -29,7 +38,7 @@ export class InicioComponent {
     if (file && file.type.startsWith('image/') && file.size < 5 * 1024 * 1024) {
       this.imagenSeleccionada = file;
     } else {
-      alert( 'Solo se permiten imágenes menores a 5MB.');
+      alert('Solo se permiten imágenes menores a 5MB.');
     }
   }
 
@@ -52,12 +61,12 @@ export class InicioComponent {
 
     this.metas = data ?? [];
     this.metas.forEach(meta => {
-  console.log('Tipo:', typeof meta.imagen_url, 'URL:', meta.imagen_url);
-});
-
+      console.log('Tipo:', typeof meta.imagen_url, 'URL:', meta.imagen_url);
+    });
 
   }
 
+  // Agregar Nueva Meta
 
   async agregarMeta() {
     this.mostrarFormulario = false;
@@ -189,5 +198,48 @@ export class InicioComponent {
   }
 
 
+  // Fin de Agregar Nueva Meta
+
+
+  // Agregar Egreso
+
+  async agregarEgreso() {
+    this.mostrarFormulario = false;
+
+    const { data: userData, error: userError } = await this.supabase.getUser();
+    if (userError || !userData?.user?.id) {
+      alert('Usuario no autenticado');
+      return;
+    }
+
+    const usuarioId = userData.user.id;
+
+    if (
+      this.nuevoEgreso.nombre.trim().length === 0 ||
+      this.nuevoEgreso.fecha.trim().length === 0 ||
+      this.nuevoEgreso.ingreso < 0
+    ) {
+      alert('Por favor, completa todos los campos correctamente.');
+      return;
+    }
+
+    const nuevoEgreso = {
+      usuario_id: usuarioId,
+      nombre: this.nuevoEgreso.nombre,
+      objetivo: this.nuevoEgreso.fecha,
+      ingreso: this.nuevoEgreso.ingreso,
+      creada_en: new Date()
+    };
+
+    const { data, error } = await this.supabase.insertMeta(nuevoEgreso);
+
+    if (error) {
+      alert('Error al guardar la meta');
+      console.error(error);
+    } else if (data && data.length > 0) {
+      this.metas.push(data[0]);
+      this.nuevoEgreso = { nombre: '', fecha: '', ingreso: 0 };
+    }
+  }
 
 }
