@@ -14,6 +14,7 @@ export class InicioComponent {
   constructor(private supabase: SupabaseService) { }
 
   mostrarFormulario = false;
+  mostrarFormularioEgresos = false;
 
   nuevaMeta = {
     nombre: '',
@@ -204,7 +205,7 @@ export class InicioComponent {
   // Agregar Egreso
 
   async agregarEgreso() {
-    this.mostrarFormulario = false;
+    this.mostrarFormularioEgresos = false;
 
     const { data: userData, error: userError } = await this.supabase.getUser();
     if (userError || !userData?.user?.id) {

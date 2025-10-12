@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="col-12 col-md-4">
-                    <button class="btn btn-green w-100 py-3" (click)="mostrarFormulario = !mostrarFormulario">
+                    <button class="btn btn-green w-100 py-3" (click)="mostrarFormularioEgresos = !mostrarFormularioEgresos">
                         Añadir Egresos <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -114,7 +114,7 @@
              <!-- Egresos Form -->
 
              <div class="row">
-                <div *ngIf="mostrarFormulario" class="col-12 col-md-6 mx-auto">
+                <div *ngIf="mostrarFormularioEgresos" class="col-12 col-md-6 mx-auto">
                     <div class="p-3 bg-light rounded shadow-sm">
                         <form (ngSubmit)="agregarEgreso()" #metaForm="ngForm">
                             <div class="mb-2">
