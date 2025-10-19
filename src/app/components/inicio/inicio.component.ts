@@ -2,15 +2,27 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../../services/supabase.service';
-import {NgChartsModule} from 'ng2-charts';
-
+import { BaseChartDirective } from 'ng2-charts'; // ✅ Correcto
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend);
 
 @Component({
   selector: 'app-inicio',
-  imports: [CommonModule, FormsModule, NgChartsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, BaseChartDirective],
   templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.css'
+  styleUrls: ['./inicio.component.css'] // ✅ corregido
 })
+
 export class InicioComponent {
 
   constructor(private supabase: SupabaseService) { }
@@ -47,6 +59,34 @@ export class InicioComponent {
   egresos: any[] = [];
   imagenSeleccionada: File | null = null;
 
+
+  // Definir datos de graficos
+  chartData = {
+    labels: ['Ingreso 1', 'Ingreso 2', 'Ingreso 3'],
+    datasets: [
+      {
+        label: 'Ingresos',
+        data: [100, 150, 200],
+        backgroundColor: '#28a745'
+      }
+    ]
+  };
+
+  chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: true }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Fecha' } },
+      y: { title: { display: true, text: 'Monto' }, beginAtZero: true }
+    }
+  };
+
+
+
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/') && file.size < 5 * 1024 * 1024) {
@@ -65,25 +105,38 @@ export class InicioComponent {
   }
 
   async cargarMetas() {
-    const { data: userData, error: userError } = await this.supabase.getUser();
-    if (userError || !userData?.user?.id) {
-      console.error('Usuario no autenticado o error al obtener datos:', userError?.message);
-      return;
-    }
-
-    const usuarioId = userData.user.id;
-    const { data, error } = await this.supabase.getMetas(usuarioId);
-
-    if (error) {
-      console.error('Error al cargar metas:', error.message);
-      return;
-    }
-
-    this.metas = data ?? [];
-    this.metas.forEach(meta => {
-      console.log('Tipo:', typeof meta.imagen_url, 'URL:', meta.imagen_url);
-    });
+  const { data: userData, error: userError } = await this.supabase.getUser();
+  if (userError || !userData?.user?.id) {
+    console.error('Usuario no autenticado o error al obtener datos:', userError?.message);
+    return;
   }
+
+  const usuarioId = userData.user.id;
+  const { data, error } = await this.supabase.getMetas(usuarioId);
+
+  if (error) {
+    console.error('Error al cargar metas:', error.message);
+    return;
+  }
+
+  this.metas = (data ?? []).map(meta => ({
+    ...meta,
+    chartData: {
+      labels: ['Ingreso inicial'],
+      datasets: [
+        {
+          label: 'Ingresos',
+          data: [meta.ingreso],
+          backgroundColor: '#28a745'
+        }
+      ]
+    }
+  }));
+
+  this.metas.forEach(meta => {
+    console.log('Tipo:', typeof meta.imagen_url, 'URL:', meta.imagen_url);
+  });
+}
 
   async cargarEgresos() {
     const { data: userData, error: userError } = await this.supabase.getUser();
@@ -99,6 +152,20 @@ export class InicioComponent {
       console.error('Error al cargar egresos:', error.message);
       return;
     }
+
+    this.egresos = (data ?? []).map(egreso => ({
+    ...egreso,
+    chartData: {
+      labels: ['Ingreso inicial'],
+      datasets: [
+        {
+          label: 'Ingresos',
+          data: [egreso.ingreso],
+          backgroundColor: '#28a745'
+        }
+      ]
+    }
+  }));
 
     this.egresos = data ?? [];
   }
@@ -162,16 +229,28 @@ export class InicioComponent {
       alert('Error al guardar la meta');
       console.error(error);
     } else if (data && data.length > 0) {
-      this.metas.push(data[0]);
+      const nuevaMetaConGrafico = {
+        ...data[0],
+        chartData: {
+          labels: ['Ingreso inicial'],
+          datasets: [
+            {
+              label: 'Ingresos',
+              data: [data[0].ingreso],
+              backgroundColor: '#28a745'
+            }
+          ]
+        }
+      };
+      this.metas.push(nuevaMetaConGrafico);
       this.nuevaMeta = { nombre: '', objetivo: 0, ingreso: 0 };
       this.imagenSeleccionada = null;
     }
   }
 
-
   async editarMeta(meta: any) {
     if (meta.ingreso >= meta.objetivo) {
-      alert(` La meta "${meta.nombre}" ya está completa. No puedes agregar más dinero.`);
+      alert(`La meta "${meta.nombre}" ya está completa. No puedes agregar más dinero.`);
       return;
     }
 
@@ -179,25 +258,41 @@ export class InicioComponent {
     if (nuevoMonto !== null) {
       const monto = parseFloat(nuevoMonto);
       if (isNaN(monto) || monto <= 0) {
-        alert(' Monto inválido. Intenta nuevamente.');
+        alert('Monto inválido. Intenta nuevamente.');
         return;
       }
 
       const ingresoTotal = meta.ingreso + monto;
       if (ingresoTotal > meta.objetivo) {
-        alert(` El monto excede el objetivo. Solo puedes agregar hasta $${meta.objetivo - meta.ingreso}.`);
+        alert(`El monto excede el objetivo. Solo puedes agregar hasta $${meta.objetivo - meta.ingreso}.`);
         return;
       }
 
       meta.ingreso = ingresoTotal;
       await this.supabase.actualizarIngreso(meta.id, meta.ingreso);
 
+      //  Actualizar gráfico
+      const fecha = new Date().toLocaleDateString();
+      meta.chartData.labels.push(fecha);
+      meta.chartData.datasets[0].data.push(meta.ingreso);
+
+      //  Forzar actualización si el gráfico no se redibuja automáticamente
+      meta.chartData = {
+        ...meta.chartData,
+        labels: [...meta.chartData.labels],
+        datasets: [
+          {
+            ...meta.chartData.datasets[0],
+            data: [...meta.chartData.datasets[0].data]
+          }
+        ]
+      };
+
       if (meta.ingreso === meta.objetivo) {
         alert(`¡Meta "${meta.nombre}" completada con éxito!`);
       }
     }
   }
-
 
   async sumarIngreso(meta: any) {
     const monto = parseFloat(meta.montoNuevo);
@@ -221,13 +316,31 @@ export class InicioComponent {
 
       await this.supabase.actualizarIngreso(meta.id, meta.ingreso);
 
+      // ✅ Actualizar gráfico
+      const fecha = new Date().toLocaleDateString();
+      meta.chartData.labels.push(fecha);
+      meta.chartData.datasets[0].data.push(meta.ingreso);
+
+      //  Forzar redibujo del gráfico
+      meta.chartData = {
+        ...meta.chartData,
+        labels: [...meta.chartData.labels],
+        datasets: [
+          {
+            ...meta.chartData.datasets[0],
+            data: [...meta.chartData.datasets[0].data]
+          }
+        ]
+      };
+
       if (meta.ingreso === meta.objetivo) {
-        alert(` ¡Meta "${meta.nombre}" completada con éxito!`);
+        alert(`¡Meta "${meta.nombre}" completada con éxito!`);
       }
     } else {
-      alert(' Monto inválido.');
+      alert('Monto inválido.');
     }
   }
+
 
   async eliminarMeta(meta: any) {
     const confirmacion = confirm(`¿Estás seguro de que quieres eliminar la meta "${meta.nombre}"?`);
@@ -307,7 +420,20 @@ export class InicioComponent {
       alert('Error al guardar el egreso');
       console.error(error);
     } else if (data && data.length > 0) {
-      this.egresos.push(data[0]);
+      const nuevaMetaConGrafico = {
+        ...data[0],
+        chartData: {
+          labels: ['Ingreso inicial'],
+          datasets: [
+            {
+              label: 'Ingresos',
+              data: [data[0].ingreso],
+              backgroundColor: '#28a745'
+            }
+          ]
+        }
+      };
+      this.egresos.push(nuevaMetaConGrafico);
       this.nuevoEgreso = { nombre: '', fechaInicio: '', fechaFin: '', ingreso: 0, objetivos: 0 };
     }
   }
@@ -429,9 +555,9 @@ export class InicioComponent {
     this.mostrarHistorial = false;
   }
 
-toggleDetalle(item: any) {
-  item.mostrarDetalle = !item.mostrarDetalle;
-}
+  toggleDetalle(item: any) {
+    item.mostrarDetalle = !item.mostrarDetalle;
+  }
 
 
 

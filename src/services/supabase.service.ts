@@ -82,6 +82,10 @@ actualizarIngreso(metaId: string, nuevoIngreso: number) {
   return this.supabase.from('metas').update({ ingreso: nuevoIngreso }).eq('id', metaId);
 }
 
+actualizarEgreso(egresoId: string, nuevoMonto: number) {
+  return this.supabase.from('egresos').update({ monto: nuevoMonto }).eq('id', egresoId);
+}
+
 eliminarMeta(metaId: string) {
   return this.supabase.from('metas').delete().eq('id', metaId);
 }
