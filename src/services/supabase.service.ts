@@ -6,6 +6,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
   providedIn: 'root'
 })
 export class SupabaseService {
+  
   private supabase: SupabaseClient;
 
   constructor() {
@@ -26,11 +27,6 @@ export class SupabaseService {
   });
 }
 
-
-
-
-
-  
   signIn(email: string, password: string) {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
@@ -49,29 +45,38 @@ export class SupabaseService {
     return this.supabase.auth.getUser();
   }
 
-  // 📥 Insertar gasto
+  // Insertar gasto
   insertGasto(gasto: any) {
     return this.supabase.from('gastos').insert([gasto]);
   }
 
-  // 📤 Obtener metas
+  // Obtener metas
   getMetas(usuarioId: string) {
     return this.supabase.from('metas').select('*').eq('usuario_id', usuarioId);
   }
 
-  // 🧾 Obtener gastos
+  //  Obtener gastos
   getGastos(usuarioId: string) {
     return this.supabase.from('gastos').select('*').eq('usuario_id', usuarioId);
   }
 
-  // 👤 Insertar perfil de usuario
+  //  Insertar perfil de usuario
   insertUsuario(usuario: { id: string; nombre: string; apellido: string; edad: number }) {
     return this.supabase.from('usuarios').insert([usuario]);
+  }
+
+  getEgresos(usuarioId: string) {
+    return this.supabase.from('egresos').select('*').eq('usuario_id', usuarioId);
   }
 
   insertMeta(meta: any) {
   return this.supabase.from('metas').insert([meta]).select(); // esto devuelve un array con el objeto insertado
 }
+insertEgreso(egreso: any) {
+  return this.supabase.from('egresos').insert([egreso]).select('*');
+}
+
+
 
 actualizarIngreso(metaId: string, nuevoIngreso: number) {
   return this.supabase.from('metas').update({ ingreso: nuevoIngreso }).eq('id', metaId);
@@ -79,6 +84,14 @@ actualizarIngreso(metaId: string, nuevoIngreso: number) {
 
 eliminarMeta(metaId: string) {
   return this.supabase.from('metas').delete().eq('id', metaId);
+}
+
+eliminarEgreso(egresoId: string) {
+  return this.supabase.from('egresos').delete().eq('id', egresoId);
+}
+
+logout() {
+  return this.supabase.auth.signOut();
 }
 
  async subirImagen(nombre: string, archivo: File): Promise<{ url: string | null; error: string | null }> {
@@ -98,8 +111,6 @@ eliminarMeta(metaId: string) {
     return { url: null, error: 'Error inesperado al subir imagen' };
   }
 }
-
-
 
 
 }

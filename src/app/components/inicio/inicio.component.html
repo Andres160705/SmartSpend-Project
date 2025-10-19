@@ -19,7 +19,7 @@
         </div>
     </div>
 </nav>
-
+<button (click)="logout()">Cerrar Sesión</button>
 <!-- Main Content -->
 <div class="content-area">
     <div class="container-fluid px-4 mt-4">
@@ -67,13 +67,14 @@
                 </div>
 
                 <div class="col-12 col-md-4">
-                    <button class="btn btn-green w-100 py-3" (click)="mostrarFormularioEgresos = !mostrarFormularioEgresos">
-                        Añadir Egresos <i class="fas fa-plus"></i>
+                    <button class="btn btn-green w-100 py-3"
+                        (click)="mostrarFormularioEgresos = !mostrarFormularioEgresos">
+                        Añadir Egresos
                     </button>
                 </div>
 
                 <div class="col-12 col-md-4">
-                    <button class="btn btn-danger w-100 py-3">
+                    <button class="btn btn-danger w-100 py-3" (click)="verHistorial()">
                         Ver Historial
                     </button>
                 </div>
@@ -110,36 +111,45 @@
             </div>
         </div>
 
+        <!-- Egresos Form -->
 
-             <!-- Egresos Form -->
 
-             <div class="row">
-                <div *ngIf="mostrarFormularioEgresos" class="col-12 col-md-6 mx-auto">
-                    <div class="p-3 bg-light rounded shadow-sm">
-                        <form (ngSubmit)="agregarEgreso()" #metaForm="ngForm">
-                            <div class="mb-2">
-                                <label>Nombre del egreso</label>
-                                <input type="text" class="form-control" [(ngModel)]="nuevoEgreso.nombre" name="nombre"
-                                    required>
-                            </div>
-                            <div class="mb-2">
-                                <label>Fecha del egreso</label>
-                                <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fecha"
-                                    name="fecha" required>
-                            </div>
-                            <div class="mb-2">
-                                <label>Ingreso inicial ($)</label>
-                                <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.ingreso" name="ingreso"
-                                    required>
-                            </div>
-                            <button type="submit" class="btn btn-success w-100 mt-2">Guardar Egreso</button>
-                        </form>
-                    </div>
+        <div class="row">
+            <div *ngIf="mostrarFormularioEgresos" class="col-12 col-md-6 mx-auto">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <form (ngSubmit)="agregarEgreso()" #metaForm="ngForm">
+                        <h1 class="p-2 d-flex justify-content-center text-success">Egresos</h1>
+                        <div class="mb-2">
+                            <label>Nombre del egreso</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevoEgreso.nombre" name="nombre"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Fecha de Inicio</label>
+                            <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fechaInicio"
+                                name="fechaInicio" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Fecha de Fin</label>
+                            <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fechaFin" name="fechaFin"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Objetivo ($)</label>
+                            <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.objetivos"
+                                name="objetivo" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Ingreso inicial ($)</label>
+                            <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.ingreso" name="ingreso"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-2">Guardar Egreso</button>
+                    </form>
                 </div>
             </div>
-
-         <!-- Fin Egresos Form -->
-
+        </div>
+        <!-- Fin Egresos Form -->
 
 
         <!-- Savings Card -->
@@ -151,6 +161,20 @@
                     <h5 class="mb-1">{{ meta.nombre }}</h5>
                     <p class="mb-0">Objetivo: ${{ meta.objetivo }}</p>
                     <p class="mb-0">Ingresado: ${{ meta.ingreso }}</p>
+
+                    <!-- 🔽 Barra de progreso -->
+                    <div class="mt-3">
+                        <label class="form-label">Progreso:</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
+                                {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                            </div>
+                        </div>
+                        <p class="mt-2 text-muted">
+                            Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Imagen centrada verticalmente -->
@@ -164,9 +188,67 @@
                     <button class="btn btn-sm btn-outline-primary" (click)="editarMeta(meta)">Agregar Dinero</button>
                     <button class="btn btn-sm btn-outline-danger" (click)="eliminarMeta(meta)">Eliminar</button>
                 </div>
-
             </div>
         </div>
+
+
+        <!-- Egresos Card -->
+        <div *ngFor="let egresos of egresos" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
+            <div class="d-flex align-items-center justify-content-between">
+                <!-- Texto a la izquierda -->
+                <div class="text-start">
+                    <h5 class="mb-1">{{ egresos.nombre }}</h5>
+                    <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
+                    <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
+                </div>
+
+                <!-- Botones a la derecha -->
+                <div class="d-flex flex-column gap-2 text-end">
+                    <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
+                        Dinero</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarEgreso(egresos)">Eliminar</button>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Egresos Card -->
+
+
+        <!-- Historial Card -->
+        <div *ngIf="mostrarHistorial" class="mt-4">
+            <h4 class="text-center mb-3">📜 Historial de Ingresos</h4>
+
+            <div class="text-end mb-3">
+                <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
+                    Cerrar Historial
+                </button>
+            </div>
+
+            <div *ngIf="historial.length === 0" class="alert alert-info text-center">
+                No hay registros recientes de metas ni egresos.
+            </div>
+
+            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                {{ item.tipo }}: {{ item.nombre }}
+                            </h5>
+                            <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
+                            <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
+                            <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ item.tipo }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fin Historial Card -->
 
 
     </div>
