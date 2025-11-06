@@ -144,6 +144,7 @@
                         </div>
                         <button type="submit" class="btn btn-success w-100 mt-2">Guardar Egreso</button>
                     </form>
+                    <hr>
                 </div>
             </div>
         </div>
@@ -151,198 +152,193 @@
 
 
         <!-- Savings Card -->
-
         <div class="accordion" id="accordionExample">
-  <div *ngFor="let meta of metas; let i = index" class="accordion-item">
-
-    <!-- Título del acordeón -->
-    <h2 class="accordion-header" id="heading{{ i }}">
-      <button class="accordion-button collapsed" type="button"
-        data-bs-toggle="collapse"
-        [attr.data-bs-target]="'#collapse' + i"
-        aria-expanded="false"
-        [attr.aria-controls]="'collapse' + i">
-        {{ meta.nombre }}
-      </button>
-    </h2>
-
-    <!-- Contenido que se despliega -->
-    <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
-      [attr.aria-labelledby]="'heading' + i"
-      data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-
-        <!-- Información principal -->
-        <h5 class="mb-2">{{ meta.nombre }}</h5>
-        <p class="mb-1">Objetivo: ${{ meta.objetivo }}</p>
-        <p class="mb-3">Ingresado: ${{ meta.ingreso }}</p>
-
-        <!-- Barra de progreso -->
-        <div class="mb-3">
-          <label class="form-label">Progreso:</label>
-          <div class="progress">
-            <div class="progress-bar bg-success" role="progressbar"
-              [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
-              {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
-            </div>
-          </div>
-          <p class="mt-2 text-muted">
-            Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
-          </p>
-        </div>
-
-        <!-- Gráfico -->
-        <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
-          style="display: block; height: 200px;"></canvas>
-
-        <!-- Imagen -->
-        <div class="text-center my-3">
-          <img [attr.src]="meta?.imagen_url || 'https://via.placeholder.com/150'"
-            alt="Imagen de la meta"
-            class="img-fluid rounded"
-            style="max-height: 150px; object-fit: cover;">
-        </div>
-
-        <!-- Botones --> 
-        <div class="d-flex justify-content-end gap-2">
-          <button class="btn btn-outline-primary btn-sm" (click)="editarMeta(meta)">Agregar Dinero</button>
-          <button class="btn btn-outline-danger btn-sm" (click)="eliminarMeta(meta)">Eliminar</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-            <!--Saving Cards-->
-            <!--
-            <div *ngFor="let meta of metas" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-
-                     Texto a la izquierda 
-                    <div class="text-start">
-                        <h5 class="mb-1">{{ meta.nombre }}</h5>
-                        <p class="mb-0">Objetivo: ${{ meta.objetivo }}</p>
-                        <p class="mb-0">Ingresado: ${{ meta.ingreso }}</p>
-
-                         Barra de progreso 
-                        <div class="mt-3">
-                            <label class="form-label">Progreso:</label>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                    [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
-                                    {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
-                                </div>
-                            </div>
-                            <p class="mt-2 text-muted">
-                                Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
-                            </p>
-                            Gráfico de barras 
-                            <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
-                                style="display: block; height: 200px;"></canvas>
-
-
-
+            <div *ngFor="let meta of metas; let i = index" class="accordion-item">
+                <!-- Encabezado del acordeón -->
+                <h2 class="accordion-header" id="heading{{ i }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapse' + i" aria-expanded="false"
+                        [attr.aria-controls]="'collapse' + i">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <h2 class="mb-0">{{ meta.nombre }}</h2>
+                            <span class="badge bg-{{ meta.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ meta.tipo }}
+                            </span>
                         </div>
-                    </div> 
 
-                     Imagen centrada verticalmente 
-                    <div class="text-center" style="width: 200px;">
-                        <img [attr.src]="meta?.imagen_url" alt="Imagen de la meta" class="img-fluid rounded"
-                            style="max-height: 150px; object-fit: cover;">
-                    </div>
-
-                     Botones a la derecha 
-                    <div class="d-flex flex-column gap-2 text-end">
-                        <button class="btn btn-sm btn-outline-primary" (click)="editarMeta(meta)">Agregar
-                            Dinero</button>
-                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarMeta(meta)">Eliminar</button>
-                    </div>
-                </div>
-            </div> -->
-
-
-            <!-- Egresos Card -->
-            <div *ngFor="let egresos of egresos" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
-                <div class="d-flex align-items-center justify-content-between">
-                    <!-- Texto a la izquierda -->
-                    <div class="text-start">
-                        <h5 class="mb-1">{{ egresos.nombre }}</h5>
-                        <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
-                        <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
-
-                        <div class="mt-3">
-                            <label class="form-label">Progreso:</label>
-                            <div class="progress">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                    [style.width.%]="(egresos.ingreso / egresos.objetivos) * 100">
-                                    {{ ((egresos.ingreso / egresos.objetivos) * 100) | number:'1.0-0' }}%
-                                </div>
-                            </div>
-                            <p class="mt-2 text-muted">
-                                Faltan ${{ egresos.objetivos - egresos.ingreso }} para completar la meta.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Botones a la derecha -->
-                    <div class="d-flex flex-column gap-2 text-end">
-                        <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
-                            Dinero</button>
-                        <button class="btn btn-sm btn-outline-danger"
-                            (click)="eliminarEgreso(egresos)">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Fin Egresos Card -->
-
-
-            <!-- Historial Card -->
-            <div *ngIf="mostrarHistorial" class="mt-4">
-                <h4 class="text-center mb-3">📜 Historial de Ingresos</h4>
-
-                <div class="text-end mb-3">
-                    <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
-                        Cerrar Historial
                     </button>
-                </div>
+                </h2>
 
-                <div *ngIf="historial.length === 0" class="alert alert-info text-center">
-                    No hay registros recientes de metas ni egresos.
-                </div>
+                <!-- Contenido desplegable -->
+                <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
 
-                <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="card-title mb-1">
-                                    {{ item.tipo }}: {{ item.nombre }}
-                                </h5>
-                                <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
-                                <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
-                                <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
+                        <!-- Contenedor principal en una fila -->
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+
+                            <!-- Texto a la izquierda  -->
+                            <div class="flex-grow-1" style="min-width: 300px; max-width: 550px;">
+                                <h5 class="mb-2 fw-bold">{{ meta.nombre }}</h5>
+                                <p class="mb-1">Objetivo: ${{ meta.objetivo }}</p>
+                                <p class="mb-3">Ingresado: ${{ meta.ingreso }}</p>
+
+                                <!-- Barra de progreso -->
+                                <div class="mb-3">
+                                    <label class="form-label">Progreso:</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
+                                            {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-muted mb-0">
+                                        Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
+                                    </p>
+                                </div>
+
+                                <!-- Gráfico -->
+                                <div class="mt-3">
+                                    <h6 class="fw-semibold">Gráfico de barras</h6>
+                                    <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
+                                        style="max-width: 100%; height: 130px; display: block;">
+                                    </canvas>
+                                </div>
                             </div>
-                            <div>
+
+                            <!-- Imagen centrada verticalmente  -->
+                            <div class="text-center">
+                                <img [attr.src]="meta?.imagen_url || 'https://via.placeholder.com/150'"
+                                    alt="Imagen de la meta" class="img-fluid rounded"
+                                    style="max-height: 300px; width: auto; object-fit: cover;">
+                            </div>
+
+                            <!-- Botones a la derecha  -->
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <button class="btn btn-outline-primary btn-xl" (click)="editarMeta(meta)">Agregar
+                                    Dinero</button>
+                                <button class="btn btn-outline-danger btn-xl"
+                                    (click)="eliminarMeta(meta)">Eliminar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Savings Card -->
+
+
+        <!-- Egresos Card -->
+        <div class="accordion" id="accordionEgresos">
+            <div *ngFor="let egresos of egresos; let i = index" class="accordion-item">
+
+                <!-- Encabezado del acordeón -->
+                <h2 class="accordion-header" id="headingEgresos{{ i }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapseEgresos' + i" aria-expanded="false"
+                        [attr.aria-controls]="'collapseEgresos' + i">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <h2 class="mb-0">{{ egresos.nombre }}</h2>
+                            <span class="badge bg-{{ egresos.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ egresos.tipo }}
+                            </span>
+                        </div>
+                    </button>
+                </h2>
+                <!-- Contenido desplegable -->
+                <div [attr.id]="'collapseEgresos' + i" class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'headingEgresos' + i" data-bs-parent="#accordionEgresos">
+                    <div class="accordion-body">
+
+                        <!-- Contenedor principal en una fila -->
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+
+                            <!-- Texto a la izquierda  -->
+                            <div class="flex-grow-1" style="min-width: 300px; max-width: 550px;">
+                                <h5 class="mb-2 fw-bold">{{ egresos.nombre }}</h5>
+                                <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
+                                <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
+
+                                <!-- Barra de progreso -->
+                                <div class="mb-3">
+                                    <label class="form-label">Progreso:</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            [style.width.%]="(egresos.ingreso / egresos.objetivos) * 100">
+                                            {{ ((egresos.ingreso / egresos.objetivos) * 100) | number:'1.0-0' }}%
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-muted mb-0">
+                                        Faltan ${{ egresos.objetivos - egresos.ingreso }} para completar la meta.
+                                    </p>
+                                </div>
+                            </div>
+                            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
                                 <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
                                     {{ item.tipo }}
                                 </span>
                             </div>
+                            <!-- Botones a la derecha  -->
+                            <div class="d-flex flex-column gap-2 text-end">
+                                <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
+                                    Dinero</button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="eliminarEgreso(egresos)">Eliminar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Fin Historial Card -->
-
-
         </div>
-    </div>
+        <!--Fin Egresos Card -->
 
-    <!-- Help Text -->
-    <div class="help-text">
-        <small class="text-muted">¿Necesitas Ayuda?</small>
-    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+        <!-- Historial Card -->
+        <div *ngIf="mostrarHistorial" class="mt-4">
+            <h4 class="text-center mb-3"> Historial de Ingresos</h4>
+
+            <div class="text-end mb-3">
+                <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
+                    Cerrar Historial
+                </button>
+            </div>
+
+            <div *ngIf="historial.length === 0" class="alert alert-info text-center">
+                No hay registros recientes de metas ni egresos.
+            </div>
+
+            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                {{ item.tipo }}: {{ item.nombre }}
+                            </h5>
+                            <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
+                            <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
+                            <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ item.tipo }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fin Historial Card -->
+
+
+    </div>
+</div>
+
+<!-- Help Text 
+<div class="help-text">
+    <small class="text-muted">¿Necesitas Ayuda?</small>
+</div>--->
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>

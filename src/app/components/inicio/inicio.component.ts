@@ -31,6 +31,7 @@ export class InicioComponent {
   mostrarFormularioEgresos = false;
 
   nuevaMeta = {
+    tipo : 'Meta',
     nombre: '',
     objetivo: 0,
     ingreso: 0
@@ -38,6 +39,7 @@ export class InicioComponent {
 
 
   nuevoEgreso = {
+    tipo : 'Egreso',
     nombre: '',
     fechaInicio: "",
     fechaFin: "",
@@ -121,6 +123,7 @@ export class InicioComponent {
 
   this.metas = (data ?? []).map(meta => ({
     ...meta,
+    tipo: 'Meta',
     chartData: {
       labels: ['Ingreso inicial'],
       datasets: [
@@ -155,6 +158,7 @@ export class InicioComponent {
 
     this.egresos = (data ?? []).map(egreso => ({
     ...egreso,
+    tipo: 'Egreso',
     chartData: {
       labels: ['Ingreso inicial'],
       datasets: [
@@ -220,7 +224,8 @@ export class InicioComponent {
       objetivo: this.nuevaMeta.objetivo,
       ingreso: this.nuevaMeta.ingreso,
       imagen_url: imagenUrl,
-      creada_en: new Date()
+      creada_en: new Date(),
+      tipo: 'Meta'
     };
 
     const { data, error } = await this.supabase.insertMeta(nuevaMeta);
@@ -243,7 +248,7 @@ export class InicioComponent {
         }
       };
       this.metas.push(nuevaMetaConGrafico);
-      this.nuevaMeta = { nombre: '', objetivo: 0, ingreso: 0 };
+      this.nuevaMeta = { nombre: '', objetivo: 0, ingreso: 0, tipo: 'Meta' };
       this.imagenSeleccionada = null;
     }
   }
@@ -316,7 +321,7 @@ export class InicioComponent {
 
       await this.supabase.actualizarIngreso(meta.id, meta.ingreso);
 
-      // ✅ Actualizar gráfico
+      //  Actualizar gráfico
       const fecha = new Date().toLocaleDateString();
       meta.chartData.labels.push(fecha);
       meta.chartData.datasets[0].data.push(meta.ingreso);
@@ -348,7 +353,7 @@ export class InicioComponent {
 
     const { error } = await this.supabase.eliminarMeta(meta.id);
     if (error) {
-      alert('❌ Error al eliminar la meta');
+      alert(' Error al eliminar la meta');
       console.error(error);
     } else {
       this.metas = this.metas.filter(m => m.id !== meta.id);
@@ -411,7 +416,8 @@ export class InicioComponent {
       fecha_fin: this.nuevoEgreso.fechaFin,
       ingreso: this.nuevoEgreso.ingreso,
       objetivos: this.nuevoEgreso.objetivos,
-      creada_en: new Date()
+      creada_en: new Date(),
+      tipo: 'Egreso'
     };
 
     const { data, error } = await this.supabase.insertEgreso(nuevoEgreso);
@@ -434,7 +440,7 @@ export class InicioComponent {
         }
       };
       this.egresos.push(nuevaMetaConGrafico);
-      this.nuevoEgreso = { nombre: '', fechaInicio: '', fechaFin: '', ingreso: 0, objetivos: 0 };
+      this.nuevoEgreso = { nombre: '', fechaInicio: '', fechaFin: '', ingreso: 0, objetivos: 0, tipo: 'Egreso' };
     }
   }
 
@@ -503,7 +509,7 @@ export class InicioComponent {
 
     const { error } = await this.supabase.eliminarEgreso(egreso.id);
     if (error) {
-      alert('❌ Error al eliminar el egreso');
+      alert(' Error al eliminar el egreso');
       console.error(error);
     } else {
       this.egresos = this.egresos.filter(e => e.id !== egreso.id);
@@ -525,7 +531,6 @@ export class InicioComponent {
 
     const usuarioId = userData.user.id;
 
-    // 🔽 AQUÍ VA TU BLOQUE
     const [metasRes, egresosRes] = await Promise.all([
       this.supabase.getMetas(usuarioId),
       this.supabase.getEgresos(usuarioId)
