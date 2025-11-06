@@ -55,7 +55,7 @@
             </p>
         </div>
 
-        <!-- Action Buttons - VERSIÓN CORREGIDA -->
+        <!-- Action Buttons -->
 
         <div class="container-fluid">
             <!-- Fila de botones -->
@@ -112,8 +112,6 @@
         </div>
 
         <!-- Egresos Form -->
-
-
         <div class="row">
             <div *ngIf="mostrarFormularioEgresos" class="col-12 col-md-6 mx-auto">
                 <div class="p-3 bg-light rounded shadow-sm">
@@ -153,130 +151,190 @@
 
 
         <!-- Savings Card -->
-        <div *ngFor="let meta of metas" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
-            <div class="d-flex align-items-center justify-content-between">
 
-                <!-- Texto a la izquierda -->
-                <div class="text-start">
-                    <h5 class="mb-1">{{ meta.nombre }}</h5>
-                    <p class="mb-0">Objetivo: ${{ meta.objetivo }}</p>
-                    <p class="mb-0">Ingresado: ${{ meta.ingreso }}</p>
+        <div *ngFor="let meta of metas" class="accordion savings-card p-4 mb-4 bg-white rounded shadow-sm" id="accordionExample">
+            <div class="accordion-item d-flex align-items-center justify-content-between">
+                <h5 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        
+                        {{meta.nombre}}
+                    </button>
+                </h5>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="text-start">
+                        <h5 class="mb-1">{{ meta.nombre }}</h5>
+                        <p class="mb-0">Objetivo: ${{ meta.objetivo }}</p>
+                        <p class="mb-0">Ingresado: ${{ meta.ingreso }}</p>
 
-                    <!-- Barra de progreso -->
-                    <div class="mt-3">
-                        <label class="form-label">Progreso:</label>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
-                                {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                        <!-- Barra de progreso -->
+                        <div class="mt-3">
+                            <label class="form-label">Progreso:</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
+                                    {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                                </div>
+                            </div>
+                            <p class="mt-2 text-muted">
+                                Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
+                            </p>
+                            <!-- Gráfico de barras -->
+                            <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
+                                style="display: block; height: 200px;"></canvas>
+
+
+
+                        </div>
+                    </div>
+                    
+                    <!-- Imagen centrada verticalmente -->
+                    <div class="text-center" style="width: 200px;">
+                        <img [attr.src]="meta?.imagen_url" alt="Imagen de la meta" class="img-fluid rounded"
+                            style="max-height: 150px; object-fit: cover;">
+                    </div>
+
+                    <!-- Botones a la derecha -->
+                    <div class="d-flex flex-column gap-2 text-end">
+                        <button class="btn btn-sm btn-outline-primary" (click)="editarMeta(meta)">Agregar
+                            Dinero</button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarMeta(meta)">Eliminar</button>
+                    </div>
+                </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--Saving Cards-->
+            <!--
+            <div *ngFor="let meta of metas" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+
+                     Texto a la izquierda 
+                    <div class="text-start">
+                        <h5 class="mb-1">{{ meta.nombre }}</h5>
+                        <p class="mb-0">Objetivo: ${{ meta.objetivo }}</p>
+                        <p class="mb-0">Ingresado: ${{ meta.ingreso }}</p>
+
+                         Barra de progreso 
+                        <div class="mt-3">
+                            <label class="form-label">Progreso:</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
+                                    {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                                </div>
+                            </div>
+                            <p class="mt-2 text-muted">
+                                Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
+                            </p>
+                            Gráfico de barras 
+                            <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
+                                style="display: block; height: 200px;"></canvas>
+
+
+
+                        </div>
+                    </div> 
+
+                     Imagen centrada verticalmente 
+                    <div class="text-center" style="width: 200px;">
+                        <img [attr.src]="meta?.imagen_url" alt="Imagen de la meta" class="img-fluid rounded"
+                            style="max-height: 150px; object-fit: cover;">
+                    </div>
+
+                     Botones a la derecha 
+                    <div class="d-flex flex-column gap-2 text-end">
+                        <button class="btn btn-sm btn-outline-primary" (click)="editarMeta(meta)">Agregar
+                            Dinero</button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarMeta(meta)">Eliminar</button>
+                    </div>
+                </div>
+            </div> -->
+
+
+            <!-- Egresos Card -->
+            <div *ngFor="let egresos of egresos" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
+                <div class="d-flex align-items-center justify-content-between">
+                    <!-- Texto a la izquierda -->
+                    <div class="text-start">
+                        <h5 class="mb-1">{{ egresos.nombre }}</h5>
+                        <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
+                        <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
+
+                        <div class="mt-3">
+                            <label class="form-label">Progreso:</label>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    [style.width.%]="(egresos.ingreso / egresos.objetivos) * 100">
+                                    {{ ((egresos.ingreso / egresos.objetivos) * 100) | number:'1.0-0' }}%
+                                </div>
+                            </div>
+                            <p class="mt-2 text-muted">
+                                Faltan ${{ egresos.objetivos - egresos.ingreso }} para completar la meta.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Botones a la derecha -->
+                    <div class="d-flex flex-column gap-2 text-end">
+                        <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
+                            Dinero</button>
+                        <button class="btn btn-sm btn-outline-danger"
+                            (click)="eliminarEgreso(egresos)">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Egresos Card -->
+
+
+            <!-- Historial Card -->
+            <div *ngIf="mostrarHistorial" class="mt-4">
+                <h4 class="text-center mb-3">📜 Historial de Ingresos</h4>
+
+                <div class="text-end mb-3">
+                    <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
+                        Cerrar Historial
+                    </button>
+                </div>
+
+                <div *ngIf="historial.length === 0" class="alert alert-info text-center">
+                    No hay registros recientes de metas ni egresos.
+                </div>
+
+                <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="card-title mb-1">
+                                    {{ item.tipo }}: {{ item.nombre }}
+                                </h5>
+                                <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
+                                <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
+                                <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                    {{ item.tipo }}
+                                </span>
                             </div>
                         </div>
-                        <p class="mt-2 text-muted">
-                            Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
-                        </p>
-                        <!-- Gráfico de barras -->
-                        <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
-                            style="display: block; height: 200px;"></canvas>
-
-
-
-                    </div>
-                </div>
-
-                <!-- Imagen centrada verticalmente -->
-                <div class="text-center" style="width: 200px;">
-                    <img [attr.src]="meta?.imagen_url" alt="Imagen de la meta" class="img-fluid rounded"
-                        style="max-height: 150px; object-fit: cover;">
-                </div>
-
-                <!-- Botones a la derecha -->
-                <div class="d-flex flex-column gap-2 text-end">
-                    <button class="btn btn-sm btn-outline-primary" (click)="editarMeta(meta)">Agregar Dinero</button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarMeta(meta)">Eliminar</button>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Egresos Card -->
-        <div *ngFor="let egresos of egresos" class="savings-card p-4 mb-4 bg-white rounded shadow-sm">
-            <div class="d-flex align-items-center justify-content-between">
-                <!-- Texto a la izquierda -->
-                <div class="text-start">
-                    <h5 class="mb-1">{{ egresos.nombre }}</h5>
-                    <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
-                    <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
-
-                    <div class="mt-3">
-                        <label class="form-label">Progreso:</label>
-                        <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                [style.width.%]="(egresos.ingreso / egresos.objetivos) * 100">
-                                {{ ((egresos.ingreso / egresos.objetivos) * 100) | number:'1.0-0' }}%
-                            </div>
-                        </div>
-                        <p class="mt-2 text-muted">
-                            Faltan ${{ egresos.objetivos - egresos.ingreso }} para completar la meta.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Botones a la derecha -->
-                <div class="d-flex flex-column gap-2 text-end">
-                    <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
-                        Dinero</button>
-                    <button class="btn btn-sm btn-outline-danger" (click)="eliminarEgreso(egresos)">Eliminar</button>
-                </div>
-            </div>
-        </div>
-        <!-- Fin Egresos Card -->
-
-
-        <!-- Historial Card -->
-        <div *ngIf="mostrarHistorial" class="mt-4">
-            <h4 class="text-center mb-3">📜 Historial de Ingresos</h4>
-
-            <div class="text-end mb-3">
-                <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
-                    Cerrar Historial
-                </button>
-            </div>
-
-            <div *ngIf="historial.length === 0" class="alert alert-info text-center">
-                No hay registros recientes de metas ni egresos.
-            </div>
-
-            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="card-title mb-1">
-                                {{ item.tipo }}: {{ item.nombre }}
-                            </h5>
-                            <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
-                            <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
-                            <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
-                        </div>
-                        <div>
-                            <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
-                                {{ item.tipo }}
-                            </span>
-                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Fin Historial Card -->
+
+
         </div>
-
-        <!-- Fin Historial Card -->
-
-
     </div>
-</div>
 
-<!-- Help Text -->
-<div class="help-text">
-    <small class="text-muted">¿Necesitas Ayuda?</small>
-</div>
+    <!-- Help Text -->
+    <div class="help-text">
+        <small class="text-muted">¿Necesitas Ayuda?</small>
+    </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
