@@ -47,6 +47,7 @@ export class RegisterComponent {
         id: userId,
         nombre,
         apellido,
+        email,
         edad
       };
 
@@ -63,6 +64,7 @@ export class RegisterComponent {
       // Guarda email y password temporalmente
       localStorage.setItem('pendingEmail', email);
       localStorage.setItem('pendingPassword', password);
+      localStorage.setItem('userId', userId);
 
       // Redirige a la página de verificación
       this.router.navigate(['/verifica-correo']);

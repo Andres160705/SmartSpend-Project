@@ -20,12 +20,14 @@ Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Too
   standalone: true,
   imports: [CommonModule, FormsModule, BaseChartDirective],
   templateUrl: './inicio.component.html',
-  styleUrls: ['./inicio.component.css'] // ✅ corregido
+  styleUrls: ['./inicio.component.css'] //  corregido
 })
 
 export class InicioComponent {
 
   constructor(private supabase: SupabaseService) { }
+
+  perfil: any = { nombre: '',apellido :'', email: '', edad: null };
 
   mostrarFormulario = false;
   mostrarFormularioEgresos = false;
@@ -98,11 +100,10 @@ export class InicioComponent {
     }
   }
 
-
-
   async ngOnInit() {
     this.cargarMetas();
     this.cargarEgresos();
+    await this.cargarPerfil();
 
   }
 
@@ -565,6 +566,29 @@ export class InicioComponent {
   }
 
 
+   async cargarPerfil() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('No se encontró usuario en sesión');
+      return;
+    }
 
+    try {
+      this.perfil = await this.supabase.obtenerUsuario(userId);
+    } catch (err: any) {
+      alert('Error al cargar perfil: ' + err.message);
+    }
+  }
 
+  async guardarCambios() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    try {
+      await this.supabase.actualizarUsuario(userId, this.perfil);
+      alert('Perfil actualizado correctamente');
+    } catch (err: any) {
+      alert('Error al actualizar perfil: ' + err.message);
+    }
+  }
 }

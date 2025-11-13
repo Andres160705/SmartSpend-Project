@@ -14,5 +14,6 @@ export const routes: Routes = [
   { path: 'verifica-correo', component: VerificaCorreoComponent },
   { path: 'actualizar-contrasena', component: ActualizarContrasenaComponent },
   { path: 'nueva-contrasena', component: NuevaContrasenaComponent },
-  { path: 'verificado', component: VerificadoComponent }
+  { path: 'verificado', component: VerificadoComponent },
+  {path: 'register',component:RegisterComponent}
 ];

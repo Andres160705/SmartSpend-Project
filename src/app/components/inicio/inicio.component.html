@@ -19,7 +19,6 @@
         </div>
     </div>
 </nav>
-<button (click)="logout()">Cerrar Sesión</button>
 <!-- Main Content -->
 <div class="content-area">
     <div class="container-fluid px-4 mt-4">
@@ -34,14 +33,63 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <div class="d-flex align-items-center justify-content-end">
-                    <span class="me-2">Tu Perfil</span>
+                <div class="dropdown d-flex align-items-center justify-content-end">
+                    <!-- Texto primero -->
+                    <span class="me-2 dropdown-toggle" id="perfilMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tu Perfil
+                    </span>
+                    <!-- Ícono del muñeco -->
                     <div class="profile-circle">
                         <i class="fas fa-user text-muted"></i>
                     </div>
+                    <!-- Menú desplegable -->
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilMenu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#editarPerfilModal">Editar perfil</a></li>
+                        <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="guardarCambios()" id="formEditarPerfil">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input [(ngModel)]="perfil.nombre" type="text" class="form-control" id="nombre" name="nombre" required minlength="3" maxlength="50">
+          </div>
+          <!--Apellido-->
+          <div class="mb-3">
+            <label for="apellido" class="form-label">Apelldio</label>
+            <input [(ngModel)]="perfil.apellido" type="text" class="form-control" id="apellido" name="apellido" required minlength="3" maxlength="50">
+          </div>
+          <!-- Edad -->
+          <div class="mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input [(ngModel)]="perfil.edad" type="number" class="form-control" id="edad" name="edad" min="14">
+          </div>
+          <!-- Correo -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <input [(ngModel)]="perfil.email" name="email" type="email" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
         <!-- Welcome Banner -->
         <div class="welcome-banner p-3 mb-4 text-center">

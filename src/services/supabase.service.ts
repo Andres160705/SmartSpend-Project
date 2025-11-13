@@ -16,7 +16,7 @@ export class SupabaseService {
     );
   }
 
-   // 🔐 Autenticación
+   //  Autenticación
   signUp(email: string, password: string) {
   return this.supabase.auth.signUp({
     email,
@@ -114,6 +114,32 @@ logout() {
     console.error('Error inesperado al subir imagen:', err);
     return { url: null, error: 'Error inesperado al subir imagen' };
   }
+}
+
+async obtenerUsuario(id: string) {
+  const { data, error } = await this.supabase
+    .from('usuarios')
+    .select('id, nombre, apellido, edad, email')
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+async actualizarUsuario(id: string, perfil: any) {
+  const { error } = await this.supabase
+    .from('usuarios')
+    .update({
+      nombre: perfil.nombre,
+      apellido: perfil.apellido,
+      edad: perfil.edad,
+      email: perfil.email  
+    })
+    .eq('id', id);
+
+  if (error) throw error;
+  return true;
 }
 
 
