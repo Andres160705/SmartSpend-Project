@@ -7,18 +7,69 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">¿Quienes Somos?</a>
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal"
+                        data-bs-target="#quienesSomosModal">¿Quiénes Somos?</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Inicio</a>
+                    <a class="nav-link text-white" href="../register/register.component.html">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Contactanos</a>
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal"
+                        data-bs-target="#contactanosModal">Contáctanos</a>
                 </li>
             </ul>
+
         </div>
     </div>
 </nav>
+
+<!--Modal ¿Quienes Somos?-->
+<div class="modal fade" id="quienesSomosModal" tabindex="-1" aria-labelledby="quienesSomosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quienesSomosLabel">¿Quiénes Somos?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>SmartSpend</strong> es una plataforma diseñada para ayudarte a tomar el control de tus
+                    finanzas personales. Visualiza tus gastos, establece metas y toma decisiones inteligentes para
+                    alcanzar tu bienestar económico.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Contactanos-->
+<div class="modal fade" id="contactanosModal" tabindex="-1" aria-labelledby="contactanosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactanosLabel">Contáctanos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="contactName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="contactName" placeholder="Tu nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="contactEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <!-- Main Content -->
 <div class="content-area">
     <div class="container-fluid px-4 mt-4">
@@ -52,43 +103,48 @@
             </div>
         </div>
 
-        <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form (ngSubmit)="guardarCambios()" id="formEditarPerfil">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form (ngSubmit)="guardarCambios()" id="formEditarPerfil">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Nombre -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input [(ngModel)]="perfil.nombre" type="text" class="form-control" id="nombre"
+                                    name="nombre" required minlength="3" maxlength="50">
+                            </div>
+                            <!--Apellido-->
+                            <div class="mb-3">
+                                <label for="apellido" class="form-label">Apelldio</label>
+                                <input [(ngModel)]="perfil.apellido" type="text" class="form-control" id="apellido"
+                                    name="apellido" required minlength="3" maxlength="50">
+                            </div>
+                            <!-- Edad -->
+                            <div class="mb-3">
+                                <label for="edad" class="form-label">Edad</label>
+                                <input [(ngModel)]="perfil.edad" type="number" class="form-control" id="edad"
+                                    name="edad" min="14">
+                            </div>
+                            <!-- Correo -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input [(ngModel)]="perfil.email" name="email" type="email" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <!-- Nombre -->
-          <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input [(ngModel)]="perfil.nombre" type="text" class="form-control" id="nombre" name="nombre" required minlength="3" maxlength="50">
-          </div>
-          <!--Apellido-->
-          <div class="mb-3">
-            <label for="apellido" class="form-label">Apelldio</label>
-            <input [(ngModel)]="perfil.apellido" type="text" class="form-control" id="apellido" name="apellido" required minlength="3" maxlength="50">
-          </div>
-          <!-- Edad -->
-          <div class="mb-3">
-            <label for="edad" class="form-label">Edad</label>
-            <input [(ngModel)]="perfil.edad" type="number" class="form-control" id="edad" name="edad" min="14">
-          </div>
-          <!-- Correo -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico</label>
-            <input [(ngModel)]="perfil.email" name="email" type="email" class="form-control" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Guardar cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
         <!-- Welcome Banner -->
