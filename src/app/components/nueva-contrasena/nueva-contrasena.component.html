@@ -1,0 +1,13 @@
+<div class="actualizar-container">
+  <h2>Establecer nueva contraseña</h2>
+
+  <p *ngIf="mensaje">{{ mensaje }}</p>
+
+  <label for="nueva">Nueva contraseña</label>
+  <input type="password" id="nueva" [(ngModel)]="nuevaPassword" placeholder="Nueva contraseña">
+
+  <label for="confirmacion">Confirmar contraseña</label>
+  <input type="password" id="confirmacion" [(ngModel)]="confirmacion" placeholder="Confirmar contraseña">
+
+  <button (click)="actualizarPassword()">Actualizar contraseña</button>
+</div>

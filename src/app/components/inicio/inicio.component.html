@@ -1,0 +1,448 @@
+<nav class="navbar navbar-expand-lg bg-primary-green">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand text-white fw-bold p-3" href="#">SmartSpend</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal"
+                        data-bs-target="#quienesSomosModal">¿Quiénes Somos?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="../register/register.component.html">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#" data-bs-toggle="modal"
+                        data-bs-target="#contactanosModal">Contáctanos</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<!--Modal ¿Quienes Somos?-->
+<div class="modal fade" id="quienesSomosModal" tabindex="-1" aria-labelledby="quienesSomosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quienesSomosLabel">¿Quiénes Somos?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>SmartSpend</strong> es una plataforma diseñada para ayudarte a tomar el control de tus
+                    finanzas personales. Visualiza tus gastos, establece metas y toma decisiones inteligentes para
+                    alcanzar tu bienestar económico.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Contactanos-->
+<div class="modal fade" id="contactanosModal" tabindex="-1" aria-labelledby="contactanosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactanosLabel">Contáctanos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="contactName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="contactName" placeholder="Tu nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactEmail" class="form-label">Correo</label>
+                        <input type="email" class="form-control" id="contactEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Main Content -->
+<div class="content-area">
+    <div class="container-fluid px-4 mt-4">
+        <!-- Header Section -->
+        <div class="row align-items-center mb-4">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <h4 class="mb-0">SmartIA</h4>
+                        <i class="fas fa-star star-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="dropdown d-flex align-items-center justify-content-end">
+                    <!-- Texto primero -->
+                    <span class="me-2 dropdown-toggle" id="perfilMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tu Perfil
+                    </span>
+                    <!-- Ícono del muñeco -->
+                    <div class="profile-circle">
+                        <i class="fas fa-user text-muted"></i>
+                    </div>
+                    <!-- Menú desplegable -->
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilMenu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#editarPerfilModal">Editar perfil</a></li>
+                        <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editarPerfilModal" tabindex="-1" aria-labelledby="editarPerfilLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form (ngSubmit)="guardarCambios()" id="formEditarPerfil">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarPerfilLabel">Editar Perfil</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Nombre -->
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input [(ngModel)]="perfil.nombre" type="text" class="form-control" id="nombre"
+                                    name="nombre" required minlength="3" maxlength="50">
+                            </div>
+                            <!--Apellido-->
+                            <div class="mb-3">
+                                <label for="apellido" class="form-label">Apelldio</label>
+                                <input [(ngModel)]="perfil.apellido" type="text" class="form-control" id="apellido"
+                                    name="apellido" required minlength="3" maxlength="50">
+                            </div>
+                            <!-- Edad -->
+                            <div class="mb-3">
+                                <label for="edad" class="form-label">Edad</label>
+                                <input [(ngModel)]="perfil.edad" type="number" class="form-control" id="edad"
+                                    name="edad" min="14">
+                            </div>
+                            <!-- Correo -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input [(ngModel)]="perfil.email" name="email" type="email" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner p-3 mb-4 text-center">
+            <h5 class="mb-0">¡Bienvenido Usuario!</h5>
+        </div>
+
+        <!-- Description Text -->
+        <div class="text-center mb-4">
+            <p class="text-decoration-underline">
+                En esta página te puedes organizar tus finanzas y tener diferentes metas para tus ahorros
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+
+        <div class="container-fluid">
+            <!-- Fila de botones -->
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-md-4">
+                    <button class="btn btn-light-green w-100 py-3" (click)="mostrarFormulario = !mostrarFormulario">
+                        Añadir Meta de Ahorro <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <button class="btn btn-green w-100 py-3"
+                        (click)="mostrarFormularioEgresos = !mostrarFormularioEgresos">
+                        Añadir Egresos
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <button class="btn btn-danger w-100 py-3" (click)="verHistorial()">
+                        Ver Historial
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fila del formulario centrado -->
+            <div class="row">
+                <div *ngIf="mostrarFormulario" class="col-12 col-md-6 mx-auto">
+                    <div class="p-3 bg-light rounded shadow-sm">
+                        <form (ngSubmit)="agregarMeta()" #metaForm="ngForm">
+                            <div class="mb-2">
+                                <label>Nombre de la meta</label>
+                                <input type="text" class="form-control" [(ngModel)]="nuevaMeta.nombre" name="nombre"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Objetivo ($)</label>
+                                <input type="number" class="form-control" [(ngModel)]="nuevaMeta.objetivo"
+                                    name="objetivo" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Ingreso inicial ($)</label>
+                                <input type="number" class="form-control" [(ngModel)]="nuevaMeta.ingreso" name="ingreso"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Imagen de la meta</label>
+                                <input type="file" class="form-control" (change)="onFileSelected($event)">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 mt-2">Guardar Meta</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Egresos Form -->
+        <div class="row">
+            <div *ngIf="mostrarFormularioEgresos" class="col-12 col-md-6 mx-auto">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <form (ngSubmit)="agregarEgreso()" #metaForm="ngForm">
+                        <h1 class="p-2 d-flex justify-content-center text-success">Egresos</h1>
+                        <div class="mb-2">
+                            <label>Nombre del egreso</label>
+                            <input type="text" class="form-control" [(ngModel)]="nuevoEgreso.nombre" name="nombre"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Fecha de Inicio</label>
+                            <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fechaInicio"
+                                name="fechaInicio" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Fecha de Fin</label>
+                            <input type="date" class="form-control" [(ngModel)]="nuevoEgreso.fechaFin" name="fechaFin"
+                                required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Objetivo ($)</label>
+                            <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.objetivos"
+                                name="objetivo" required>
+                        </div>
+                        <div class="mb-2">
+                            <label>Ingreso inicial ($)</label>
+                            <input type="number" class="form-control" [(ngModel)]="nuevoEgreso.ingreso" name="ingreso"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-2">Guardar Egreso</button>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Egresos Form -->
+
+
+        <!-- Savings Card -->
+        <div class="accordion" id="accordionExample">
+            <div *ngFor="let meta of metas; let i = index" class="accordion-item">
+                <!-- Encabezado del acordeón -->
+                <h2 class="accordion-header" id="heading{{ i }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapse' + i" aria-expanded="false"
+                        [attr.aria-controls]="'collapse' + i">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <h2 class="mb-0">{{ meta.nombre }}</h2>
+                            <span class="badge bg-{{ meta.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ meta.tipo }}
+                            </span>
+                        </div>
+
+                    </button>
+                </h2>
+
+                <!-- Contenido desplegable -->
+                <div [attr.id]="'collapse' + i" class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+
+                        <!-- Contenedor principal en una fila -->
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+
+                            <!-- Texto a la izquierda  -->
+                            <div class="flex-grow-1" style="min-width: 300px; max-width: 550px;">
+                                <h5 class="mb-2 fw-bold">{{ meta.nombre }}</h5>
+                                <p class="mb-1">Objetivo: ${{ meta.objetivo }}</p>
+                                <p class="mb-3">Ingresado: ${{ meta.ingreso }}</p>
+
+                                <!-- Barra de progreso -->
+                                <div class="mb-3">
+                                    <label class="form-label">Progreso:</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            [style.width.%]="(meta.ingreso / meta.objetivo) * 100">
+                                            {{ ((meta.ingreso / meta.objetivo) * 100) | number:'1.0-0' }}%
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-muted mb-0">
+                                        Faltan ${{ meta.objetivo - meta.ingreso }} para completar la meta.
+                                    </p>
+                                </div>
+
+                                <!-- Gráfico -->
+                                <div class="mt-3">
+                                    <h6 class="fw-semibold">Gráfico de barras</h6>
+                                    <canvas baseChart [data]="meta.chartData" [options]="chartOptions" [type]="'bar'"
+                                        style="max-width: 100%; height: 130px; display: block;">
+                                    </canvas>
+                                </div>
+                            </div>
+
+                            <!-- Imagen centrada verticalmente  -->
+                            <div class="text-center">
+                                <img [attr.src]="meta?.imagen_url || 'https://via.placeholder.com/150'"
+                                    alt="Imagen de la meta" class="img-fluid rounded"
+                                    style="max-height: 300px; width: auto; object-fit: cover;">
+                            </div>
+
+                            <!-- Botones a la derecha  -->
+                            <div class="d-flex flex-column align-items-end gap-2">
+                                <button class="btn btn-outline-primary btn-xl" (click)="editarMeta(meta)">Agregar
+                                    Dinero</button>
+                                <button class="btn btn-outline-danger btn-xl"
+                                    (click)="eliminarMeta(meta)">Eliminar</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin Savings Card -->
+
+
+        <!-- Egresos Card -->
+        <div class="accordion" id="accordionEgresos">
+            <div *ngFor="let egresos of egresos; let i = index" class="accordion-item">
+
+                <!-- Encabezado del acordeón -->
+                <h2 class="accordion-header" id="headingEgresos{{ i }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        [attr.data-bs-target]="'#collapseEgresos' + i" aria-expanded="false"
+                        [attr.aria-controls]="'collapseEgresos' + i">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <h2 class="mb-0">{{ egresos.nombre }}</h2>
+                            <span class="badge bg-{{ egresos.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ egresos.tipo }}
+                            </span>
+                        </div>
+                    </button>
+                </h2>
+                <!-- Contenido desplegable -->
+                <div [attr.id]="'collapseEgresos' + i" class="accordion-collapse collapse"
+                    [attr.aria-labelledby]="'headingEgresos' + i" data-bs-parent="#accordionEgresos">
+                    <div class="accordion-body">
+
+                        <!-- Contenedor principal en una fila -->
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-4">
+
+                            <!-- Texto a la izquierda  -->
+                            <div class="flex-grow-1" style="min-width: 300px; max-width: 550px;">
+                                <h5 class="mb-2 fw-bold">{{ egresos.nombre }}</h5>
+                                <p class="mb-0">Objetivo: ${{ egresos.objetivos }}</p>
+                                <p class="mb-0">Ingresado: ${{ egresos.ingreso }}</p>
+
+                                <!-- Barra de progreso -->
+                                <div class="mb-3">
+                                    <label class="form-label">Progreso:</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                            [style.width.%]="(egresos.ingreso / egresos.objetivos) * 100">
+                                            {{ ((egresos.ingreso / egresos.objetivos) * 100) | number:'1.0-0' }}%
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-muted mb-0">
+                                        Faltan ${{ egresos.objetivos - egresos.ingreso }} para completar la meta.
+                                    </p>
+                                </div>
+                            </div>
+                            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
+                                <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                    {{ item.tipo }}
+                                </span>
+                            </div>
+                            <!-- Botones a la derecha  -->
+                            <div class="d-flex flex-column gap-2 text-end">
+                                <button class="btn btn-sm btn-outline-primary" (click)="editarEgreso(egresos)">Agregar
+                                    Dinero</button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="eliminarEgreso(egresos)">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Fin Egresos Card -->
+
+
+        <!-- Historial Card -->
+        <div *ngIf="mostrarHistorial" class="mt-4">
+            <h4 class="text-center mb-3"> Historial de Ingresos</h4>
+
+            <div class="text-end mb-3">
+                <button class="btn btn-outline-secondary" (click)="cerrarHistorial()">
+                    Cerrar Historial
+                </button>
+            </div>
+
+            <div *ngIf="historial.length === 0" class="alert alert-info text-center">
+                No hay registros recientes de metas ni egresos.
+            </div>
+
+            <div *ngFor="let item of historial" class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-1">
+                                {{ item.tipo }}: {{ item.nombre }}
+                            </h5>
+                            <p class="mb-0">Monto ingresado: <strong>${{ item.monto }}</strong></p>
+                            <p class="mb-0">Objetivo: ${{ item.objetivo }}</p>
+                            <small class="text-muted">Fecha: {{ item.fecha | date:'short' }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-{{ item.tipo === 'Meta' ? 'success' : 'primary' }}">
+                                {{ item.tipo }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fin Historial Card -->
+
+
+    </div>
+</div>
+
+<!-- Help Text 
+<div class="help-text">
+    <small class="text-muted">¿Necesitas Ayuda?</small>
+</div>--->
+
+<!-- Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>

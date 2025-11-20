@@ -1,0 +1,20 @@
+<div class="login-background">
+  <form (ngSubmit)="iniciarSesion()" #loginForm="ngForm">
+    <h2>Iniciar Sesión</h2>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Escribe tu email" [(ngModel)]="usuario.email">
+
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" name="password" placeholder="Escribe tu contraseña"
+      [(ngModel)]="usuario.password">
+
+    <button type="submit">Enviar</button>
+
+    <hr>
+    <button class="enlace-boton" type="button" (click)="recuperarContrasena()">¿Olvidaste tu contraseña?</button>
+    <button class="enlace-boton" type="button" (click)="irRegister()">¿No tienes cuenta?</button>
+
+  </form>
+
+</div>
