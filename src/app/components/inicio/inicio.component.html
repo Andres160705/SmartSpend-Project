@@ -73,17 +73,63 @@
 <!-- Main Content -->
 <div class="content-area">
     <div class="container-fluid px-4 mt-4">
-        <!-- Header Section -->
-        <div class="row align-items-center mb-4">
-            <div class="col-md-8">
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <h4 class="mb-0">SmartIA</h4>
-                        <i class="fas fa-star star-icon"></i>
+        <!-- Header Section with Chat and Profile -->
+        <div class="row align-items-start mb-4">
+            <div class="col-md-6">
+                <!-- Chat IA Component - Compact -->
+                <div class="card shadow-sm" style="border: none; border-radius: 12px; overflow: hidden; height: fit-content; max-width: 280px;">
+                    <!-- Chat Header -->
+                    <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.4rem 0.6rem;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="font-size: 0.9rem;">SmartIA <i class="fas fa-star" style="font-size: 0.7rem; color: #FFD700;"></i></h6>
+                            <button class="btn btn-light btn-sm" (click)="clearChat()" style="font-size: 0.7rem; padding: 0.2rem 0.4rem;">Limpiar</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="card-body" style="height: 150px; overflow-y: auto; background-color: #f8f9fa; padding: 0.4rem;">
+                        <div *ngFor="let msg of chatMessages" [ngClass]="msg.type === 'user' ? 'text-end' : 'text-start'" class="mb-1">
+                            <div [ngClass]="{
+                                'bg-primary': msg.type === 'user',
+                                'text-white': msg.type === 'user',
+                                'bg-light': msg.type === 'bot',
+                                'text-dark': msg.type === 'bot'
+                            }" style="display: inline-block; max-width: 85%; padding: 0.3rem 0.5rem; border-radius: 8px; word-wrap: break-word; font-size: 0.85rem;">
+                                {{ msg.text }}
+                            </div>
+                        </div>
+
+                        <!-- Loading Indicator -->
+                        <div *ngIf="chatIsLoading" class="text-start mb-1">
+                            <div class="bg-light text-dark" style="display: inline-block; padding: 0.3rem 0.5rem; border-radius: 8px; font-size: 0.85rem;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="card-footer" style="background-color: white; border-top: 1px solid #e0e0e0; padding: 0.4rem;">
+                        <div class="input-group input-group-sm">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Pregunta..." 
+                                [(ngModel)]="chatUserMessage"
+                                (keyup.enter)="sendChatMessage()"
+                                [disabled]="chatIsLoading"
+                                style="font-size: 0.85rem;">
+                            <button 
+                                class="btn btn-primary btn-sm" 
+                                (click)="sendChatMessage()"
+                                [disabled]="chatIsLoading"
+                                style="font-size: 0.85rem;">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-6 text-end">
                 <div class="dropdown d-flex align-items-center justify-content-end">
                     <!-- Texto primero -->
                     <span class="me-2 dropdown-toggle" id="perfilMenu" data-bs-toggle="dropdown" aria-expanded="false">

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { SupabaseService } from '../../../services/supabase.service';
 import { BaseChartDirective } from 'ng2-charts'; // ✅ Correcto
 import {
@@ -25,12 +26,18 @@ Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Too
 
 export class InicioComponent {
 
-  constructor(private supabase: SupabaseService) { }
+  constructor(private supabase: SupabaseService, private http: HttpClient) { }
 
   perfil: any = { nombre: '',apellido :'', email: '', edad: null };
 
   mostrarFormulario = false;
   mostrarFormularioEgresos = false;
+
+  // Chat IA Properties
+  chatMessages: { type: 'user' | 'bot'; text: string }[] = [];
+  chatUserMessage: string = '';
+  chatIsLoading: boolean = false;
+  chatError: string = '';
 
   nuevaMeta = {
     tipo : 'Meta',
@@ -104,7 +111,13 @@ export class InicioComponent {
     this.cargarMetas();
     this.cargarEgresos();
     await this.cargarPerfil();
+    this.initializeChat();
+  }
 
+  initializeChat() {
+    this.chatMessages = [
+      { type: 'bot', text: '¡Hola! Soy SmartIA, tu asistente financiero. ¿En qué puedo ayudarte hoy?' }
+    ];
   }
 
   async cargarMetas() {
@@ -580,6 +593,48 @@ export class InicioComponent {
     }
   }
 
+  // Chat IA Methods
+  sendChatMessage() {
+    if (!this.chatUserMessage.trim()) return;
+
+    // Add user message
+    this.chatMessages.push({ type: 'user', text: this.chatUserMessage });
+    const userQuery = this.chatUserMessage;
+    this.chatUserMessage = '';
+    this.chatIsLoading = true;
+    this.chatError = '';
+
+    // Send to proxy
+    this.http.post<any>('http://localhost:3000/api/gemini/chat', { message: userQuery })
+      .subscribe({
+        next: (response) => {
+          this.chatIsLoading = false;
+          const botResponse = response.text || 'No se pudo obtener respuesta';
+          this.chatMessages.push({ type: 'bot', text: botResponse });
+        },
+        error: (error) => {
+          this.chatIsLoading = false;
+          let errorMsg = 'Error: No se pudo conectar con el servidor';
+          if (error.status === 404) {
+            errorMsg = 'Error: El servidor no responde en /api/gemini/chat';
+          } else if (error.status === 500) {
+            errorMsg = 'Error: El modelo Gemini no está disponible';
+          } else if (error.status === 0) {
+            errorMsg = 'Error: No se puede conectar a localhost:3000. Inicia el proxy con: node server-mejorado.js';
+          }
+          this.chatError = errorMsg;
+          this.chatMessages.push({ type: 'bot', text: errorMsg });
+        }
+      });
+  }
+
+  clearChat() {
+    this.chatMessages = [];
+    this.chatUserMessage = '';
+    this.chatIsLoading = false;
+    this.chatError = '';
+    this.initializeChat();
+  }
   async guardarCambios() {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
